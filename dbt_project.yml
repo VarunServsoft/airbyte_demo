@@ -1,37 +1,39 @@
-
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'fivetran1'
-version: '1.0.0'
+name: 'my_dbt_project'
+version: '1.0'
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'fivetran1'
+profile: 'default'
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
-model-paths: ["models"]
-analysis-paths: ["analyses"]
+source-paths: ["models"]
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
-seed-paths: ["seeds"]
+data-paths: ["data"]
 macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
 
-clean-targets:         # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
+target-path: "target"
+clean-targets: ["target"]
 
+vars:
+  environment: "dev"
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+repositories:
+  - name: "my_repo"
+    package-name: "my_package"
+    path: "path/to/repo"
+    git: "git@github.com:VarunServsoft/airbyte_demo.git"
+    install-command: "pip install -r requirements.txt"
 
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
 models:
-  fivetran1:
-    # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
+  my_dbt_project:
+    my_first_model:
+      enabled: true
+      materialized: view
+      unique_key: id
+      tags: ['tag1', 'tag2']
+      description: "This is my first dbt model."
+      columns:
+        - name: id
+          description: "The primary key for this table"
+          tests:
+            - unique
+            - not_null
